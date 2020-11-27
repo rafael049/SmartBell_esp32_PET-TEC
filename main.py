@@ -1,6 +1,7 @@
 import socket
 import sys
 from machine import Pin
+from time import sleep
 
 # class for representing a button
 class Button():
@@ -39,12 +40,19 @@ def connect_wifi(ssid, senha):
     
     if not wlan.active():
         wlan.active(True)
+        sleep(0.1)
+    if wlan.ifconfig()[0] == "0.0.0.0":
         wlan.connect(ssid, senha)
+        sleep(0.1)
+        if wlan.ifconfig()[0] == "0.0.0.0":
+            print(": Erro ao conectar ao WiFi")
+    
+
 
 
 def main():
-    ssid = "Nome Wifi"
-    passwd = "Senha Wifi"
+    ssid = "Nullpointer"
+    passwd = "null049"
     # pino do botao
     pin = 4  # D4
     # Server port
@@ -80,6 +88,8 @@ def main():
             if button.is_being_pressed():
                 print("button pressed!")
                 connection.sendall(msg.encode())
+            
+            sleep(0.001)
                 
     except KeyboardInterrupt:
         sock.close()
